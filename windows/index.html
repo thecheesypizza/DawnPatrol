@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Dawn Patrol on Windows</title>
+<meta name="theme-color" content="#0A171C">
+<style>
+  :root { --bg:#0A171C; --panel:#102229; --ink:#E7F1F3; --mute:#A9C0C6; --acc:#3FB6C8; --line:#1D3640; color-scheme: dark; }
+  @media (prefers-color-scheme: light) { :root { --bg:#F3F8F9; --panel:#FFFFFF; --ink:#0E2128; --mute:#4A6670; --acc:#0B7A8C; --line:#D2E2E6; color-scheme: light; } }
+  * { box-sizing: border-box; }
+  body { margin:0; background:var(--bg); color:var(--ink); font:16px/1.55 "Segoe UI", system-ui, sans-serif; }
+  main { max-width: 42rem; margin: 0 auto; padding: 2rem 1rem 3rem; }
+  h1 { font-size: 1.7rem; margin: 0 0 .25rem; }
+  h2 { font-size: 1.15rem; margin: 2rem 0 .5rem; }
+  p { margin: 0 0 1rem; color: var(--mute); }
+  .lead { color: var(--ink); }
+  pre { position: relative; margin: 0 0 1rem; padding: .9rem 1rem; background: var(--panel); border: 1px solid var(--line); border-radius: 10px; overflow-x: auto; font: 13px/1.5 Consolas, "Cascadia Mono", monospace; color: var(--ink); white-space: pre-wrap; word-break: break-all; }
+  button { font: inherit; font-size: .9rem; padding: .45rem .9rem; border-radius: 8px; border: 0; background: var(--acc); color: #04141A; cursor: pointer; margin: 0 0 1rem; }
+  button:focus-visible, a:focus-visible { outline: 3px solid var(--acc); outline-offset: 2px; }
+  a { color: var(--acc); }
+  ol { padding-left: 1.2rem; color: var(--mute); } li { margin-bottom: .4rem; }
+</style>
+</head>
+<body>
+<main>
+  <h1>Dawn Patrol on Windows</h1>
+  <p class="lead">Open the surf forecast in its own app window, with Start Menu and Desktop shortcuts. It uses Microsoft Edge or Google Chrome, which are already on most PCs.</p>
+
+  <h2>Install from PowerShell</h2>
+  <p>Open PowerShell (no admin needed) and paste this line:</p>
+  <pre id="cmd">&amp; ([scriptblock]::Create((irm https://dawnpatrol.casadelfuego.org/windows/DawnPatrol.ps1))) -Install</pre>
+  <button id="copy" type="button">Copy command</button>
+  <p>It adds a Dawn Patrol shortcut to your Start Menu and Desktop, then opens the app. Your spots and settings are the same as in your browser.</p>
+
+  <h2>Other ways to use it</h2>
+  <ol>
+    <li>Open the app window without installing: replace <code>-Install</code> with nothing.</li>
+    <li>Choose a browser or size: add <code>-Browser Chrome</code> or <code>-Width 1000 -Height 700</code>.</li>
+    <li>Remove everything: replace <code>-Install</code> with <code>-Uninstall</code>.</li>
+    <li>No PowerShell: in Edge, open the site, then Settings &gt; Apps &gt; Install this site as an app.</li>
+  </ol>
+
+  <p>You can read the script first at <a href="/windows/DawnPatrol.ps1">/windows/DawnPatrol.ps1</a>. It is plain text and only creates shortcuts and opens the site.</p>
+  <p><a href="/">Back to Dawn Patrol</a></p>
+</main>
+<script>
+  document.getElementById('copy').addEventListener('click', function () {
+    var t = document.getElementById('cmd').textContent, b = this;
+    function done(ok) { b.textContent = ok ? 'Copied' : 'Select the text and copy it'; setTimeout(function () { b.textContent = 'Copy command'; }, 2000); }
+    if (navigator.clipboard) navigator.clipboard.writeText(t).then(function () { done(true); }, function () { done(false); }); else done(false);
+  });
+</script>
+</body>
+</html>

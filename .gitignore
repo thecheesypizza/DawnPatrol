@@ -1,0 +1,15 @@
+dist/
+cf/
+cf_base/
+node_modules/
+*.png
+!pwa/*.png
+!windows/electron/build/*.png
+*.out
+*.done
+*.log
+patch*.json
+crawl_*.json
+__pycache__/
+.DS_Store
+windows/electron/dist/

@@ -1,0 +1,46 @@
+name: CI
+on:
+  push:
+  pull_request:
+jobs:
+  build-and-worker-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Build and split (asserts the split files equal the build)
+        run: |
+          bash build.sh
+          mkdir -p cf
+          python3 split.py
+      - name: Syntax check the modules
+        run: |
+          for f in src/*.js worker/index.js; do node --check "$f"; done
+      - name: Worker unit tests
+        run: |
+          node worker/test7.mjs
+          node worker/test8.mjs
+          node worker/test9.mjs
+          node worker/test_docs.mjs
+  browser-smoke:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: pip install playwright && playwright install --with-deps chromium
+      - run: bash build.sh
+      - name: Browser suites (app and tide)
+        run: |
+          python3 tests/test_app.py | tee app.out
+          python3 tests/test_tide.py | tee tide.out
+          ! grep -q "^FAIL " app.out tide.out
